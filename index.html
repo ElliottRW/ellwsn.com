@@ -192,6 +192,8 @@
 
   window.addEventListener('mousemove', e => { MOUSE.x = e.clientX; MOUSE.y = e.clientY; });
   window.addEventListener('mouseleave', () => { MOUSE.x = -9999; MOUSE.y = -9999; });
+  window.addEventListener('touchmove', e => { MOUSE.x = e.touches[0].clientX; MOUSE.y = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchend', () => { MOUSE.x = -9999; MOUSE.y = -9999; });
   window.addEventListener('resize', () => { resize(); });
   init();
   draw();
