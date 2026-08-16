@@ -1,0 +1,12 @@
+[
+  { "date": "2026-08-03", "quantity": 0.172117, "price": 116.20, "amount": 20.00 },
+  { "date": "2026-08-04", "quantity": 0.171160, "price": 116.85, "amount": 20.00 },
+  { "date": "2026-08-05", "quantity": 0.173311, "price": 115.40, "amount": 20.00 },
+  { "date": "2026-08-06", "quantity": 0.170795, "price": 117.10, "amount": 20.00 },
+  { "date": "2026-08-07", "quantity": 0.169564, "price": 117.95, "amount": 20.00 },
+  { "date": "2026-08-10", "quantity": 0.168634, "price": 118.60, "amount": 20.00 },
+  { "date": "2026-08-11", "quantity": 0.170503, "price": 117.30, "amount": 20.00 },
+  { "date": "2026-08-12", "quantity": 0.168209, "price": 118.90, "amount": 20.00 },
+  { "date": "2026-08-13", "quantity": 0.167436, "price": 119.45, "amount": 20.00 },
+  { "date": "2026-08-14", "quantity": 0.168421, "price": 118.75, "amount": 20.00 }
+]
