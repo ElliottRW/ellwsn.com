@@ -21,12 +21,12 @@ export function bucketForRange(dailyPoints, range) {
   if (filtered.length === 0) filtered = dailyPoints.slice(-1);
 
   if (range === '1W' || range === '1M') {
-    return filtered.map(p => ({ label: fmtDate(p.date), date: p.date, invested: p.invested, value: p.value, isStatus: p.isStatus }));
+    return filtered.map(p => ({ label: fmtDate(p.date), date: p.date, invested: p.invested, value: p.value }));
   }
   const byMonth = new Map();
   filtered.forEach(p => byMonth.set(p.date.slice(0, 7), p));
   return [...byMonth.entries()].map(([key, p]) => ({
-    label: monthLabel(key), date: p.date, invested: p.invested, value: p.value, isStatus: p.isStatus,
+    label: monthLabel(key), date: p.date, invested: p.invested, value: p.value,
   }));
 }
 
@@ -110,7 +110,7 @@ export function renderChart(buckets) {
     const gain = b.value - b.invested;
     const gainPct = b.invested > 0 ? (gain / b.invested) * 100 : 0;
     tooltip.innerHTML = `
-      <div class="t-date">${fmtDateFull(b.date)}${b.isStatus ? ' (latest)' : ''}</div>
+      <div class="t-date">${fmtDateFull(b.date)}</div>
       <div class="t-row"><span><span class="sw" style="background:var(--accent)"></span>Invested</span><b>${GBP.format(b.invested)}</b></div>
       <div class="t-row"><span><span class="sw" style="background:${gain >= 0 ? 'var(--gain)' : 'var(--critical)'}"></span>${gain >= 0 ? 'Gain' : 'Loss'}</span><b style="color:${gain >= 0 ? 'var(--good)' : 'var(--critical)'}">${gain >= 0 ? '+' : ''}${GBP.format(gain)} (${gainPct.toFixed(1)}%)</b></div>
       <div class="t-row"><span>Worth</span><b>${GBP.format(b.value)}</b></div>

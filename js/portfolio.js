@@ -6,25 +6,19 @@ function buildDailyPoints(purchases) {
   return purchases.map(p => {
     cumInvested += p.amount;
     cumShares += p.quantity;
-    return { date: p.date, invested: cumInvested, value: cumShares * p.price, price: p.price, isStatus: false };
+    return { date: p.date, invested: cumInvested, value: cumShares * p.price, price: p.price };
   });
 }
 
-export function summarizePortfolio(purchases, status) {
+export function summarizePortfolio(purchases) {
   const points = buildDailyPoints(purchases);
+  const last = points[points.length - 1];
 
-  const totalInvested = points[points.length - 1].invested;
+  const totalInvested = last.invested;
   const totalShares = purchases.reduce((sum, p) => sum + p.quantity, 0);
   const avgCost = totalInvested / totalShares;
-  const lastPurchase = purchases[purchases.length - 1];
-  const currentPrice = status && status.price ? status.price : lastPurchase.price;
-  const currentValue = totalShares * currentPrice;
-
-  if (status && status.asOf && status.asOf > lastPurchase.date) {
-    points.push({ date: status.asOf, invested: totalInvested, value: currentValue, price: currentPrice, isStatus: true });
-  } else {
-    points[points.length - 1].value = currentValue;
-  }
+  const currentPrice = purchases[purchases.length - 1].price;
+  const currentValue = last.value; // totalShares * currentPrice, already true by construction
 
   const gain = currentValue - totalInvested;
   const gainPct = totalInvested > 0 ? (gain / totalInvested) * 100 : 0;

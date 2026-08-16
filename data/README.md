@@ -1,7 +1,7 @@
 # Updating the portfolio tracker
 
-Two files drive the whole page. Edit, commit, push — GitHub Pages redeploys
-automatically. No build step.
+One file drives the whole page: `purchases.csv`. Edit, commit, push —
+GitHub Pages redeploys automatically. No build step.
 
 ## `purchases.csv` — one row per receipt
 
@@ -23,15 +23,10 @@ date,quantity,price,amount
 Opens fine in Excel/Numbers/Google Sheets too if that's easier than a text
 editor — just keep the header row and save back out as CSV.
 
-## `status.json` — current price snapshot
-
-Update this whenever you check the app (doesn't need to be daily). Drives the
-"Portfolio value" and gain/loss figures — without it the page just shows cost
-basis.
-
-```json
-{ "asOf": "2026-08-15", "price": 119.10, "currency": "GBP" }
-```
+There's no separate "current price" file — "Portfolio value" and the
+gain/loss figures are always priced at your most recent purchase, so the
+page stays accurate the moment you add today's row. No manual price
+updates to remember.
 
 ## The demo data
 

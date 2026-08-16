@@ -9,12 +9,9 @@ initParticles(document.getElementById('bg'));
 
 async function load() {
   const kpis = document.getElementById('kpis');
-  let purchases, status;
+  let purchases;
   try {
-    [purchases, status] = await Promise.all([
-      fetch('data/purchases.csv').then(r => r.text()).then(parsePurchasesCsv),
-      fetch('data/status.json').then(r => r.json()).catch(() => null),
-    ]);
+    purchases = await fetch('data/purchases.csv').then(r => r.text()).then(parsePurchasesCsv);
   } catch (e) {
     kpis.innerHTML = '<div class="empty-state">Couldn\'t load portfolio data.</div>';
     return;
@@ -32,7 +29,7 @@ async function load() {
   purchases = [...purchases].sort((a, b) => a.date.localeCompare(b.date));
 
   const { points, totalInvested, totalShares, avgCost, currentPrice, currentValue, gain, gainPct } =
-    summarizePortfolio(purchases, status);
+    summarizePortfolio(purchases);
 
   document.getElementById('dayLabel').textContent = `Day ${purchases.length}`;
   document.getElementById('startDate').textContent = fmtDateFull(purchases[0].date);
