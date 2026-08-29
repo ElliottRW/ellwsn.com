@@ -70,6 +70,12 @@ body {
   color: var(--text-secondary);
 }
 
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .topbar a {
   display: flex;
   align-items: center;
@@ -81,6 +87,7 @@ body {
   border-radius: 8px;
   border: 1px solid var(--border);
   transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
 }
 .topbar a:hover { color: var(--text-primary); border-color: var(--text-muted); }
 
