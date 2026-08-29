@@ -33,6 +33,23 @@
 }
 .kpi .delta.up { color: var(--good); }
 .kpi .delta.down { color: var(--critical); }
+.kpi .price-note {
+  margin-top: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.kpi .price-note i {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  display: inline-block;
+  flex-shrink: 0;
+}
+.kpi .price-note.live { color: var(--text-secondary); }
+.kpi .price-note.live i { background: var(--accent); }
 
 /* ---- cards ---- */
 .card {

@@ -1,11 +1,8 @@
-import { initParticles } from './particles.js';
-import { GBP, fmtDateFull } from './format.js';
+import { GBP, fmtDateFull, fmtTime } from './format.js';
 import { parsePurchasesCsv } from './csv.js';
 import { summarizePortfolio } from './portfolio.js';
 import { bucketForRange, renderChart } from './chart.js';
 import { renderTable } from './table.js';
-
-initParticles(document.getElementById('bg'));
 
 async function load() {
   const kpis = document.getElementById('kpis');
@@ -16,6 +13,7 @@ async function load() {
     kpis.innerHTML = '<div class="empty-state">Couldn\'t load portfolio data.</div>';
     return;
   }
+  const livePrice = await fetch('data/live-price.json').then(r => r.json()).catch(() => null);
 
   if (!purchases || purchases.length === 0) {
     document.getElementById('dayLabel').textContent = 'Day 0';
@@ -28,19 +26,23 @@ async function load() {
 
   purchases = [...purchases].sort((a, b) => a.date.localeCompare(b.date));
 
-  const { points, totalInvested, totalShares, avgCost, currentPrice, currentValue, gain, gainPct } =
-    summarizePortfolio(purchases);
+  const { points, totalInvested, totalShares, avgCost, currentPrice, currentValue, gain, gainPct, priceIsLive, priceAsOf } =
+    summarizePortfolio(purchases, livePrice);
 
   document.getElementById('dayLabel').textContent = `Day ${purchases.length}`;
   document.getElementById('startDate').textContent = fmtDateFull(purchases[0].date);
 
   const deltaClass = gain >= 0 ? 'up' : 'down';
   const deltaArrow = gain >= 0 ? '▲' : '▼';
+  const priceNote = priceIsLive
+    ? `Live · updated ${fmtTime(priceAsOf)}`
+    : 'Priced at your last purchase';
   kpis.innerHTML = `
     <div class="kpi hero-kpi">
       <div class="label">Portfolio value</div>
       <div class="value">${GBP.format(currentValue)}</div>
       <div class="delta ${deltaClass}">${deltaArrow} ${GBP.format(Math.abs(gain))} (${gainPct.toFixed(1)}%)</div>
+      <div class="price-note ${priceIsLive ? 'live' : ''}"><i></i>${priceNote}</div>
     </div>
     <div class="kpi">
       <div class="label">Total invested</div>

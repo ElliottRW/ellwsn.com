@@ -1,7 +1,8 @@
 # Updating the portfolio tracker
 
-One file drives the whole page: `purchases.csv`. Edit, commit, push —
-GitHub Pages redeploys automatically. No build step.
+Two files drive the page: `purchases.csv` (required) and `live-price.json`
+(optional). Edit, commit, push — GitHub Pages redeploys automatically. No
+build step.
 
 ## `purchases.csv` — one row per receipt
 
@@ -23,10 +24,28 @@ date,quantity,price,amount
 Opens fine in Excel/Numbers/Google Sheets too if that's easier than a text
 editor — just keep the header row and save back out as CSV.
 
-There's no separate "current price" file — "Portfolio value" and the
-gain/loss figures are always priced at your most recent purchase, so the
-page stays accurate the moment you add today's row. No manual price
-updates to remember.
+By default "Portfolio value" and the gain/loss figures are priced at your
+most recent purchase — no manual updates needed for daily posting.
+
+## `live-price.json` — optional, for filming a same-day comparison
+
+Before recording a video where you want to show the day's live movement,
+look up VUAG's current price yourself (broker app, Google, etc.) and drop
+it in here:
+
+```json
+{ "price": 111.85, "asOf": "2026-08-29T09:15" }
+```
+
+- `price` — the number you looked up
+- `asOf` — `YYYY-MM-DDTHH:MM`, when you looked it up
+
+The page only trusts this if `asOf` is **today** — so it can't be
+forgotten and silently go stale. Once the date rolls over it's ignored
+automatically and the page falls back to pricing off your last purchase,
+no cleanup needed. Whichever source is active is labelled clearly under
+"Portfolio value" ("Live · updated HH:MM" vs "Priced at your last
+purchase"), so it's never ambiguous which one a viewer is looking at.
 
 ## The demo data
 

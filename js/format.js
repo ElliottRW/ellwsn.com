@@ -11,6 +11,11 @@ export function fmtDateFull(iso) {
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+export function fmtTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
 export function niceMax(v) {
   if (v <= 0) return 10;
   const mag = Math.pow(10, Math.floor(Math.log10(v)));
