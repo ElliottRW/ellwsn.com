@@ -41,12 +41,13 @@
   <section class="card">
     <div class="chart-head">
       <h2>What the market's added</h2>
-      <p class="card-note">Each bar splits what you've put in from what the market's added (or taken), priced at each purchase.</p>
+      <p class="card-note">Your total value against what you've put in. The shaded gap between them is the profit (or loss), priced at each purchase.</p>
     </div>
     <div class="chart-controls">
       <div class="legend" id="legend">
+        <span><i class="sw-total"></i>Total</span>
         <span><i class="sw-invested"></i>Invested</span>
-        <span><i class="sw-gain"></i>Gain</span>
+        <span><i class="sw-profit"></i>Profit</span>
         <span><i class="sw-loss"></i>Loss</span>
       </div>
       <div class="range-toggle" id="rangeToggle">
@@ -57,7 +58,7 @@
       </div>
     </div>
     <div class="chart-scroll">
-      <svg id="chart" viewBox="0 0 700 260" preserveAspectRatio="none"></svg>
+      <svg id="chart" viewBox="0 0 700 260"></svg>
       <div class="tooltip" id="tooltip"></div>
     </div>
   </section>

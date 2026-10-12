@@ -86,6 +86,7 @@
 .legend {
   display: flex;
   gap: 0.9rem;
+  flex-wrap: wrap;
   font-size: 0.75rem;
   color: var(--text-secondary);
 }
@@ -95,9 +96,10 @@
   border-radius: 50%;
   display: inline-block;
 }
-.legend .sw-invested { background: var(--accent); }
-.legend .sw-gain { background: var(--gain); }
-.legend .sw-loss { background: var(--critical); }
+.legend .sw-total { width: 14px; height: 3px; border-radius: 2px; background: var(--accent); }
+.legend .sw-invested { width: 14px; height: 0; border-radius: 0; border-top: 2px dashed var(--context-line); }
+.legend .sw-profit { border-radius: 2px; background: var(--good); opacity: 0.6; }
+.legend .sw-loss { border-radius: 2px; background: var(--critical); opacity: 0.6; }
 
 .range-toggle {
   display: flex;
@@ -127,11 +129,22 @@
 #chart { display: block; width: 100%; height: 260px; touch-action: pan-y; }
 #chart .gridline { stroke: var(--gridline); stroke-width: 1; }
 #chart .axis-label { fill: var(--text-muted); font-size: 10px; }
-#chart .bar-group { transition: opacity 0.12s; }
-#chart .bar-invested path, #chart .bar-invested rect { fill: var(--accent); }
-#chart .bar-gain path, #chart .bar-gain rect { fill: var(--gain); }
-#chart .bar-loss path, #chart .bar-loss rect { fill: var(--critical); }
-#chart .bar-hit { cursor: pointer; }
+#chart .area-profit { fill: var(--good); opacity: 0.22; }
+#chart .area-loss { fill: var(--critical); opacity: 0.22; }
+#chart .line-invested { fill: none; stroke: var(--context-line); stroke-width: 1.5; stroke-dasharray: 4 3; stroke-linejoin: round; }
+#chart .line-total { fill: none; stroke: var(--accent); stroke-width: 2.25; stroke-linejoin: round; stroke-linecap: round; }
+#chart .guide { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2 3; }
+.chart-dot {
+  position: absolute;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border: 2px solid var(--card-bg);
+  box-sizing: content-box;
+}
+.chart-dot.dot-total { background: var(--accent); }
+.chart-dot.dot-invested { background: var(--context-line); }
 #chart .value-label { fill: var(--text-secondary); font-size: 10px; font-weight: 600; }
 
 .tooltip {
@@ -153,6 +166,7 @@
 .tooltip.visible { opacity: 1; }
 .tooltip .t-date { color: var(--text-primary); font-weight: 600; margin-bottom: 0.2rem; }
 .tooltip .t-row { display: flex; justify-content: space-between; gap: 0.75rem; }
+.tooltip .t-total { margin-top: 0.2rem; padding-top: 0.2rem; border-top: 1px solid var(--border); color: var(--text-primary); }
 .tooltip .t-row .sw { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:0.35rem; }
 
 /* ---- table ---- */
