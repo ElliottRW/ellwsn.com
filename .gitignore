@@ -1,0 +1,3 @@
+.DS_Store
+# Raw Trading 212 API dumps: every order on the account, never commit
+t212-*.json

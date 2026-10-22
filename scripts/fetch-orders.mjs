@@ -1,6 +1,8 @@
 // Pulls filled £20 VUAG buys from the Trading 212 API and appends any new
 // days to data/purchases.csv. Safe to re-run: days already in the file are
 // skipped. Needs T212_API_KEY and T212_API_SECRET; Node 20+ (built-in fetch).
+// Set T212_DUMP to a file path to also save the raw API pages there (keep it
+// out of git: the response includes every order on the account).
 
 import { readFile, writeFile } from 'node:fs/promises';
 
@@ -49,9 +51,11 @@ const lastDate = rows.length ? rows[rows.length - 1].split(',')[0] : '';
 // History comes back newest first; stop paging once we're past the last day
 // already recorded.
 const found = new Map();
+const rawPages = [];
 let path = '/api/v0/equity/history/orders?limit=50';
 while (path) {
   const page = await getJson(path);
+  rawPages.push(page);
   let reachedKnown = false;
   for (const item of page.items ?? []) {
     const date = londonDate(item.fill?.filledAt ?? item.order.createdAt);
@@ -61,6 +65,11 @@ while (path) {
     found.set(date, [date, fill.quantity, fill.price, (order.filledValue ?? order.value).toFixed(2)].join(','));
   }
   path = reachedKnown || !page.items?.length ? null : page.nextPagePath;
+}
+
+if (process.env.T212_DUMP) {
+  await writeFile(process.env.T212_DUMP, JSON.stringify(rawPages, null, 2) + '\n');
+  console.log(`Saved ${rawPages.length} raw page(s) to ${process.env.T212_DUMP}`);
 }
 
 if (found.size === 0) {
