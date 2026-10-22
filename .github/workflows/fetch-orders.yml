@@ -7,6 +7,11 @@ on:
     - cron: '30 7 * * *'
     - cron: '30 8 * * *'
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: fetch full history into a dummy CSV and compare with purchases.csv (commits nothing)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -37,14 +42,32 @@ jobs:
           node-version: 20
 
       - name: Fetch orders
-        if: steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.run == 'true' && !inputs.dry_run
         env:
           T212_API_KEY: ${{ secrets.T212_API_KEY }}
           T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
         run: node scripts/fetch-orders.mjs
 
+      - name: Fetch full history into dummy CSV and compare
+        if: inputs.dry_run
+        env:
+          T212_API_KEY: ${{ secrets.T212_API_KEY }}
+          T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
+          PURCHASES_CSV: dry-run/purchases-from-t212.csv
+        run: |
+          mkdir -p dry-run
+          echo "date,quantity,price,amount" > "$PURCHASES_CSV"
+          node scripts/fetch-orders.mjs
+          node scripts/compare-purchases.mjs data/purchases.csv "$PURCHASES_CSV" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: inputs.dry_run
+        with:
+          name: purchases-from-t212
+          path: dry-run/purchases-from-t212.csv
+
       - name: Commit changes
-        if: steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.run == 'true' && !inputs.dry_run
         run: |
           if git diff --quiet data/purchases.csv; then
             echo "Nothing new."

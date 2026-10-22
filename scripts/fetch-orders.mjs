@@ -7,7 +7,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 const BASE_URL = process.env.T212_BASE_URL || 'https://live.trading212.com';
 const TICKER_PREFIX = 'VUAG';
 const AMOUNT = 20;
-const CSV_PATH = new URL('../data/purchases.csv', import.meta.url);
+const CSV_PATH = process.env.PURCHASES_CSV || new URL('../data/purchases.csv', import.meta.url);
 
 const { T212_API_KEY, T212_API_SECRET } = process.env;
 if (!T212_API_KEY || !T212_API_SECRET) {
@@ -60,7 +60,7 @@ while (path) {
     const { order, fill } = item;
     found.set(date, [date, fill.quantity, fill.price, (order.filledValue ?? order.value).toFixed(2)].join(','));
   }
-  path = reachedKnown ? null : page.nextPagePath;
+  path = reachedKnown || !page.items?.length ? null : page.nextPagePath;
 }
 
 if (found.size === 0) {
