@@ -1,0 +1,57 @@
+name: Fetch Trading 212 orders
+
+on:
+  schedule:
+    # 08:30 UK time. Cron is UTC, so run at both 07:30 and 08:30 UTC and skip
+    # whichever lands before 08:00 in London (BST vs GMT).
+    - cron: '30 7 * * *'
+    - cron: '30 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-orders
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip if before 08:00 London
+        id: gate
+        run: |
+          hour=$(TZ=Europe/London date +%-H)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$hour" -lt 8 ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 20
+
+      - name: Fetch orders
+        if: steps.gate.outputs.run == 'true'
+        env:
+          T212_API_KEY: ${{ secrets.T212_API_KEY }}
+          T212_API_SECRET: ${{ secrets.T212_API_SECRET }}
+        run: node scripts/fetch-orders.mjs
+
+      - name: Commit changes
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          if git diff --quiet data/purchases.csv; then
+            echo "Nothing new."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add data/purchases.csv
+          git commit -m "Add Trading 212 purchases for $(TZ=Europe/London date +%F)"
+          git push
