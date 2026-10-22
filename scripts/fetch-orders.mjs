@@ -55,7 +55,7 @@ while (path) {
   let reachedKnown = false;
   for (const item of page.items ?? []) {
     const date = londonDate(item.fill?.filledAt ?? item.order.createdAt);
-    if (date < lastDate) reachedKnown = true;
+    if (date < lastDate) { reachedKnown = true; continue; }
     if (!isWantedBuy(item) || knownDates.has(date) || found.has(date)) continue;
     const { order, fill } = item;
     found.set(date, [date, fill.quantity, fill.price, (order.filledValue ?? order.value).toFixed(2)].join(','));
