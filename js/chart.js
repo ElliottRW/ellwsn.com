@@ -28,7 +28,7 @@ function yDomain(buckets) {
 
 const pts = arr => arr.map(([x, y]) => `${x},${y}`).join(' ');
 
-const H = 260;
+const H = 400;
 const padL = 46, padR = 12, padT = 14, padB = 24;
 const innerH = H - padT - padB;
 
