@@ -2,9 +2,10 @@ name: Fetch Trading 212 orders
 
 on:
   schedule:
-    # 08:30 UK time, weekdays. Cron is UTC, so run at both 07:30 and 08:30 UTC
-    # and skip whichever lands before 08:00 in London (BST vs GMT).
-    - cron: '30 7 * * 1-5'
+    # Weekdays at 08:15 and 08:30 UTC (an hour later in UK time during BST).
+    # Two slots in case GitHub delays or drops one; the later run finds
+    # nothing new.
+    - cron: '15 8 * * 1-5'
     - cron: '30 8 * * 1-5'
   workflow_dispatch:
     inputs:
